@@ -1,15 +1,27 @@
 import { AWS } from 'aws-sdk';
 const docClient = new AWS.DynamoDB.DocumentClient({region: 'eu-west-1'});
 
-exports.handle = function(event: any, context: any, callback: any) {
+export const handler = function(event: any, context: any, callback: any) {
+    
+    const result = getDynamoDB(event.author, event.music, callback);
+    let lyrics = '';
+    if(result == null) {
+        lyrics = getLyrics(event.author, event.music);
+        insertDynamoDB(event.author, event.music, lyrics, callback);
+    }
+    else {
+        lyrics = result;
+    }
 
+    return lyrics;
 }
 
-function insertDynamoDB(callback: any) {
+function insertDynamoDB(author: string, music: string, lyrics: string, callback: any) {
     const params = {
         Item: {
-            date: Date.now(),
-            message: 'Insert dynamoDB'
+            author: author,
+            music: music,
+            lyrics: lyrics
         },
         
         TableName: 'lyrics'
@@ -17,37 +29,21 @@ function insertDynamoDB(callback: any) {
 
     docClient.put(params, function(err: any, data: any) {
         if(err) {
-            callback(err, null);
+            return callback(err, null);
         }
         else {
-            callback(null, data)
+            return callback(null, data)
         }
     })
 }
 
-function getDynamoDB(callback: any) {
+function getDynamoDB(author: string, music: string, callback: any) {
     
-    /*
-    const scannigParams = {
-        TableName: 'lyrics',
-        Limit: 100
-    };
-    // scan percorre toda a tabela
-    // utilizar query
-    docClient.scan(scannigParams, function (err: any, data: any) {
-        if(err) {
-            callback(err, null);
-        }
-        else {
-            callback(null, data)
-        }
-    });
-    */
-
     const params = {
         TableName: 'lyrics',
         Key: {
-            "date": 123123123123
+            "author": author,
+            "music": music
         }
     };
 
@@ -59,4 +55,9 @@ function getDynamoDB(callback: any) {
             callback(null, data)
         }
     });
+}
+
+async function getLyrics(author: string, music: string): Promise<string> {
+    const response = await fetch(`https://api.lyrics.ovh/v1/${author}/${music}`).then(result => result.json()).catch(err => console.log(err));
+    return response.lyrics;
 }
