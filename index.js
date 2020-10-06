@@ -1,4 +1,4 @@
-import { AWS } from 'aws-sdk';
+const AWS = require('aws-sdk');
 const docClient = new AWS.DynamoDB.DocumentClient({region: 'eu-west-1'});
 
 export const handler = function(event, context, callback) {
