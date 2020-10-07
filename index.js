@@ -1,17 +1,26 @@
 const AWS = require('aws-sdk');
-const docClient = new AWS.DynamoDB.DocumentClient({region: 'eu-west-1'});
+global.fetch = require('node-fetch');
 
-export const handler = function(event, context, callback) {
-    
-    const result = getDynamoDB(event.author, event.music, callback);
-    let lyrics = '';
-    if(result == null) {
-        lyrics = getLyrics(event.author, event.music);
-        insertDynamoDB(event.author, event.music, lyrics, callback);
+let options  = {};
+if(process.env.IS_OFFLINE) {
+    options = {
+        region: 'localhost',
+        endpoint: 'http://localhost:8000'
     }
-    else {
-        lyrics = result;
-    }
+}
+
+const docClient = new AWS.DynamoDB.DocumentClient(options);
+
+module.exports.handler = function(event, context, callback) {
+    const { author, music } = event.pathParameters;
+    // const result = getDynamoDB(event.author, event.music, callback);
+    let lyrics = getLyrics(author, music);
+    // if(result == null) {
+    //     insertDynamoDB(event.author, event.music, lyrics, callback);
+    // }
+    // else {
+    //     lyrics = result;
+    // }
 
     return lyrics; 
 }
@@ -58,6 +67,7 @@ function getDynamoDB(author, music, callback) {
 }
 
 async function getLyrics(author, music) {
-    const response = await fetch(`https://api.lyrics.ovh/v1/${author}/${music}`).then(result => result.json()).catch(err => console.log(err));
+    const url = `https://api.lyrics.ovh/v1/${author}/${music}`;
+    const response = await fetch(url).then(result => result.json()).catch(err => console.log(err));
     return response.lyrics;
 }

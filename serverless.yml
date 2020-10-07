@@ -19,11 +19,11 @@ provider:
         Resource: '*'
 
 functions:
-  hello:
-    handler: handler.hello
+  index:
+    handler: index.handler
     events:
       - http:
-          path: hello
+          path: lyrify/{author}/{music}
           method: GET
           cors: true
 
