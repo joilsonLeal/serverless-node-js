@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/joilsonLeal/serverless-node-js.git",
-  "author": "joilson <joilson.bica@somospi.com.br>",
+  "author": "joilson <joilson_rg@hotmail.com>",
   "license": "MIT",
   "scripts": {
     "compile": "tsc",
     "start": "tsc -w"
   },
   "devDependencies": {
+    "serverless-offline": "^6.8.0",
     "typescript": "^4.0.3"
   },
   "dependencies": {
