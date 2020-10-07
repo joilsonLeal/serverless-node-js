@@ -1,9 +1,10 @@
 {
     "compilerOptions": {
-        "target": "es6",
-        "outDir": "js",
+        "target": "ES2019",
+        "outDir": "dist",
         "noEmitOnError": true,
         "noImplicitAny": true,
         "removeComments": true
-    }
+    },
+    "exclude": ["dist/"]
 }

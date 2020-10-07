@@ -20,7 +20,7 @@ provider:
 
 functions:
   index:
-    handler: js/index.handler
+    handler: dist/index.handler
     events:
       - http:
           path: lyrify/{author}/{music}
