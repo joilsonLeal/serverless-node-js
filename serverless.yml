@@ -23,9 +23,7 @@ functions:
     handler: handler.hello
 
 plugins:
-    - serverless-webpack
     - serverless-offline
-    - serverless-dynamodb-local
 
 package:
     individually: true
@@ -33,6 +31,10 @@ package:
 custom:
     tableName: player-points-table
     bucketName: myserverlessprojectuploadbucket-123123
+    webpack:
+      webpackConfig: 'webpack.config.js'
+      includeModules: false
+      packager: 'npm'
     dynamodb:
         stages:
             - dev
