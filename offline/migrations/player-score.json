@@ -1,16 +1,24 @@
 {
     "Table": {
-        "TableName": "player-points-table",
-        "KeySchema": [
+        "TableName": "lyrics",
+        "AttributeDefinitions" : [
             {
-                "AttributeName": "ID",
-                "KeyType": "HASH"
+                "AttributeName" : "author",
+                "AttributeType" : "S"   
+            },
+            {
+                "AttributeName" : "music",
+                "AttributeType" : "S"
             }
         ],
-        "AttributeDefinitions": [
+        "KeySchema" : [
             {
-                "AttributeName": "ID",
-                "AttributeType": "S"
+                "AttributeName" : "author",
+                "KeyType" : "HASH"
+            },
+            {
+                "AttributeName" : "music",
+                "KeyType" : "RANGE"
             }
         ],
         "ProvisionedThoughput": {

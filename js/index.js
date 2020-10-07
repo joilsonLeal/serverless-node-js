@@ -4,8 +4,10 @@ global.fetch = require('node-fetch');
 let options  = {};
 if(process.env.IS_OFFLINE) {
     options = {
-        region: 'localhost',
-        endpoint: 'http://localhost:8000'
+        region: 'local',
+        endpoint: 'http://localhost:8000',
+        accessKeyId: process.env.AWS_SECRET_KEY,
+        accessSecretKey: process.env.AWS_SECRET_KEY,
     }
 }
 
@@ -13,14 +15,18 @@ const docClient = new AWS.DynamoDB.DocumentClient(options);
 
 module.exports.handler = function(event, context, callback) {
     const { author, music } = event.pathParameters;
-    // const result = getDynamoDB(event.author, event.music, callback);
-    let lyrics = getLyrics(author, music);
-    // if(result == null) {
-    //     insertDynamoDB(event.author, event.music, lyrics, callback);
-    // }
-    // else {
-    //     lyrics = result;
-    // }
+
+    const result = getDynamoDB(author, music, callback);
+    
+    let lyrics = '';
+    
+    if(!result) {
+        lyrics = getLyrics(author, music);
+        insertDynamoDB(author, music, lyrics, callback);
+    }
+    else {
+        lyrics = result.lyrics;
+    }
 
     return lyrics; 
 }
@@ -38,10 +44,12 @@ function insertDynamoDB(author, music, lyrics, callback) {
 
     docClient.put(params, function(err, data) {
         if(err) {
-            return callback(err, null);
+            console.log(err)
+            return err;
         }
         else {
-            return callback(null, data)
+            console.log(data);
+            return data;
         }
     })
 }
@@ -58,10 +66,12 @@ function getDynamoDB(author, music, callback) {
 
     docClient.get(params, function (err, data) {
         if(err) {
-            callback(err, null);
+            console.log(err);
+            return err;
         }
         else {
-            callback(null, data)
+            console.log(data);
+            return data;
         }
     });
 }

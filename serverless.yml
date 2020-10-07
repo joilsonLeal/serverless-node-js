@@ -35,7 +35,7 @@ package:
     individually: true
 
 custom:
-    tableName: player-points-table
+    tableName: lyrics
     bucketName: myserverlessprojectuploadbucket-123123
     dynamodb:
         stages:
@@ -57,10 +57,18 @@ resources:
             Type: AWS::DynamoDB::Table
             Properties:
                 TableName: ${self:custom.tableName}
-                AttributeDefinitions:
-                    - AttributeName: ID
-                      AttributeType: S
-                KeySchema:
-                    - AttributeName: ID
-                      KeyType: HASH
+                AttributeDefinitions: 
+                    - 
+                      AttributeName: "author"
+                      AttributeType: "S"
+                    - 
+                      AttributeName: "music"
+                      AttributeType: "S"
+                KeySchema: 
+                    - 
+                      AttributeName: "author"
+                      KeyType: "HASH"
+                    - 
+                      AttributeName: "music"
+                      KeyType: "RANGE"
                 BillingMode: PAY_PER_REQUEST
