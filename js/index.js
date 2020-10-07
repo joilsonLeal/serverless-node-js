@@ -1,18 +1,73 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-function teste() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const author = 'Coldplay';
-        const music = 'Adventure of a Lifetime';
-        const response = yield fetch(`https://api.lyrics.ovh/v1/${author}/${music}`).then(result => result.json()).catch(err => console.log(err));
-        console.log(response.lyrics);
+const AWS = require('aws-sdk');
+global.fetch = require('node-fetch');
+
+let options  = {};
+if(process.env.IS_OFFLINE) {
+    options = {
+        region: 'localhost',
+        endpoint: 'http://localhost:8000'
+    }
+}
+
+const docClient = new AWS.DynamoDB.DocumentClient(options);
+
+module.exports.handler = function(event, context, callback) {
+    const { author, music } = event.pathParameters;
+    // const result = getDynamoDB(event.author, event.music, callback);
+    let lyrics = getLyrics(author, music);
+    // if(result == null) {
+    //     insertDynamoDB(event.author, event.music, lyrics, callback);
+    // }
+    // else {
+    //     lyrics = result;
+    // }
+
+    return lyrics; 
+}
+
+function insertDynamoDB(author, music, lyrics, callback) {
+    const params = {
+        Item: {
+            author: author,
+            music: music,
+            lyrics: lyrics
+        },
+        
+        TableName: 'lyrics'
+    };
+
+    docClient.put(params, function(err, data) {
+        if(err) {
+            return callback(err, null);
+        }
+        else {
+            return callback(null, data)
+        }
+    })
+}
+
+function getDynamoDB(author, music, callback) {
+    
+    const params = {
+        TableName: 'lyrics',
+        Key: {
+            "author": author,
+            "music": music
+        }
+    };
+
+    docClient.get(params, function (err, data) {
+        if(err) {
+            callback(err, null);
+        }
+        else {
+            callback(null, data)
+        }
     });
 }
-teste();
+
+async function getLyrics(author, music) {
+    const url = `https://api.lyrics.ovh/v1/${author}/${music}`;
+    const response = await fetch(url).then(result => result.json()).catch(err => console.log(err));
+    return response.lyrics;
+}
