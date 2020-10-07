@@ -21,9 +21,15 @@ provider:
 functions:
   hello:
     handler: handler.hello
+    events:
+      - http:
+          path: hello
+          method: GET
+          cors: true
 
 plugins:
     - serverless-offline
+    - serverless-dynamodb-local
 
 package:
     individually: true
@@ -31,10 +37,6 @@ package:
 custom:
     tableName: player-points-table
     bucketName: myserverlessprojectuploadbucket-123123
-    webpack:
-      webpackConfig: 'webpack.config.js'
-      includeModules: false
-      packager: 'npm'
     dynamodb:
         stages:
             - dev
