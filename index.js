@@ -13,7 +13,7 @@ export const handler = function(event, context, callback) {
         lyrics = result;
     }
 
-    return lyrics;
+    return lyrics; 
 }
 
 function insertDynamoDB(author, music, lyrics, callback) {
