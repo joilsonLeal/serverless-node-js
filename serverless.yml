@@ -23,7 +23,7 @@ functions:
     handler: dist/index.handler
     events:
       - http:
-          path: lyrify/{author}/{music}
+          path: lyrify/{key1}/{key2}
           method: GET
           cors: true
 
