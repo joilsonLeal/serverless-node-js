@@ -12,15 +12,15 @@ const docClient = new AWS.DynamoDB.DocumentClient({region: 'us-east-2'});
 export const handler = async (event: ReqEvent, context: Context) => {
     const { author, music } = event;
 
-    const result = getDynamoDB(author, music);
+    const result = await getDynamoDB(author, music);
     let lyrics: any = '';
-
+    
     if(!result) {
         console.log("Inserindo");
         lyrics = await getLyrics(author, music);
 
         if(lyrics) 
-            insertDynamoDB(author, music, lyrics);
+            await insertDynamoDB(author, music, lyrics);
         else
             lyrics = 'Não foi encontrada letra.';
     }
@@ -42,7 +42,10 @@ async function insertDynamoDB(author: string, music: string, lyrics: string) {
         TableName: 'lyrics'
     };
 
-    const data = await docClient.put(params).promise();
+    await docClient.put(params, (err, data) => {
+        if(err)
+            throw Error(String(err));
+    }).promise();
 }
 
 async function getDynamoDB(author: string, music: string) {
@@ -56,6 +59,7 @@ async function getDynamoDB(author: string, music: string) {
     };
 
     const data = await docClient.get(params).promise();
+
     if(data.Item)
         return data.Item.lyrics;
     else
