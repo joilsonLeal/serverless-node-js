@@ -1,15 +1,11 @@
 import * as AWS from 'aws-sdk';
 import{ Context } from 'aws-lambda';
 global.fetch = require('node-fetch');
-
-interface ReqEvent {
-    author: string;
-    music: string;
-}
+import RequestLyricInterface from './interfaces/RequestInterface';
 
 const docClient = new AWS.DynamoDB.DocumentClient({region: 'us-east-2'});
 
-export const handler = async (event: ReqEvent, context: Context) => {
+export const handler = async (event: RequestLyricInterface, context: Context) => {
     const { author, music } = event;
 
     const result = await getDynamoDB(author, music);
