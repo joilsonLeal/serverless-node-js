@@ -1,31 +1,34 @@
+import ApplicationError from '../exceptions/ApplicationError';
 import * as AWS from 'aws-sdk';
 import{ Context } from 'aws-lambda';
 global.fetch = require('node-fetch');
-import { APIGatewayProxyEventInterface } from './interfaces/APIGateWayInterace';
+import { 
+    APIGatewayProxyEventInterface, 
+    APIGatewayProxyResultInterface 
+} from '../interfaces/APIGateWayInterace';
 
-const docClient = new AWS.DynamoDB.DocumentClient({region: 'us-east-2'});
+const docClient = new AWS.DynamoDB.DocumentClient({region: 'us-east-1'});
 
 export const handler = async (event: APIGatewayProxyEventInterface, context: Context) => {
-    // const { author, music } = event;
-
-    // const result = await getDynamoDB(author, music);
-    // let lyrics: any = '';
+    const { music, author } = event.pathParameters;
+    const result = await getDynamoDB(author, music);
+    let lyrics: any = '';
     
-    // if(!result) {
-    //     console.log("Inserindo");
-    //     lyrics = await getLyrics(author, music);
+    if(!result) {
+        console.log("Inserindo");
+        lyrics = await getLyrics(author, music);
 
-    //     if(lyrics) 
-    //         await insertDynamoDB(author, music, lyrics);
-    //     else
-    //         lyrics = 'Não foi encontrada letra.';
-    // }
-    // else {
-    //     console.log("Tem no banco!");
-    //     lyrics = result;
-    // }
+        if(lyrics) 
+            await insertDynamoDB(author, music, lyrics);
+        else
+            lyrics = 'Não foi encontrada letra.';
+    }
+    else {
+        console.log("Tem no banco!");
+        lyrics = result;
+    }
 
-    // return lyrics; 
+    return lyrics; 
 }
 
 async function insertDynamoDB(author: string, music: string, lyrics: string) {
@@ -66,6 +69,6 @@ async function getLyrics(author: string, music: string): Promise<any> {
     const response = await 
         fetch(`https://api.lyrics.ovh/v1/${author}/${music}`)
             .then(result => result.json())
-            .catch(err => {throw Error(err)});
+            .catch(err => {throw new ApplicationError(err)});
     return response.lyrics;
 }
