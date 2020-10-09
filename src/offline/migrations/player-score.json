@@ -1,0 +1,29 @@
+{
+    "Table": {
+        "TableName": "lyrics",
+        "AttributeDefinitions" : [
+            {
+                "AttributeName" : "author",
+                "AttributeType" : "S"   
+            },
+            {
+                "AttributeName" : "music",
+                "AttributeType" : "S"
+            }
+        ],
+        "KeySchema" : [
+            {
+                "AttributeName" : "author",
+                "KeyType" : "HASH"
+            },
+            {
+                "AttributeName" : "music",
+                "KeyType" : "RANGE"
+            }
+        ],
+        "ProvisionedThoughput": {
+            "ReadCapacityUnits": 1,
+            "WriteCapacityUnits": 1
+        }
+    }
+}

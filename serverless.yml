@@ -20,7 +20,7 @@ provider:
 
 functions:
   index:
-    handler: dist/index.handler
+    handler: src/dist/index.handler
     events:
       - http:
           path: lyrify/{key1}/{key2}
@@ -45,7 +45,7 @@ custom:
             inMemory: true
             migrate: true
         migration:
-            dir: offline/migrations
+            dir: src/offline/migrations
 
 resources:
     Resources:

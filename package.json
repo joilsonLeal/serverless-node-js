@@ -9,7 +9,7 @@
     "compile": "tsc",
     "start": "tsc -w",
     "server": "sls offline start",
-    "ncc": "ncc build index.ts -o dist"
+    "ncc": "ncc build src/index.ts -o src/dist"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.63",
