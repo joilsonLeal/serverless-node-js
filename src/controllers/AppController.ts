@@ -2,8 +2,7 @@ import ApplicationError from '../exceptions/ApplicationError';
 import * as AWS from 'aws-sdk';
 global.fetch = require('node-fetch');
 import { 
-    APIGatewayProxyEventInterface, 
-    APIGatewayProxyResultInterface 
+    APIGatewayProxyEventInterface
 } from '../interfaces/APIGateWayInterace';
 
 import RepositoryInterface from '../repositories/LyricRepository';
