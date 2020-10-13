@@ -1,6 +1,5 @@
 import ApplicationError from '../exceptions/ApplicationError';
 import * as AWS from 'aws-sdk';
-import{ Context } from 'aws-lambda';
 global.fetch = require('node-fetch');
 import { 
     APIGatewayProxyEventInterface, 
@@ -9,27 +8,51 @@ import {
 
 const docClient = new AWS.DynamoDB.DocumentClient({region: 'us-east-1'});
 
-export const handler = async (event: APIGatewayProxyEventInterface, context: Context) => {
-    const { music, author } = event.pathParameters;
-    const result = await getDynamoDB(author, music);
-    let lyrics: any = '';
+export default class AppController {
+    public async run(event: APIGatewayProxyEventInterface) {
+        const { music, author } = event.pathParameters;
+        const result = await getDynamoDB(author, music);
+        let lyrics: any = '';
+        
+        if(!result) {
+            console.log("Inserindo");
+            lyrics = await getLyrics(author, music);
     
-    if(!result) {
-        console.log("Inserindo");
-        lyrics = await getLyrics(author, music);
-
-        if(lyrics) 
-            await insertDynamoDB(author, music, lyrics);
-        else
-            lyrics = 'Não foi encontrada letra.';
+            if(lyrics) 
+                await insertDynamoDB(author, music, lyrics);
+            else
+                lyrics = 'Não foi encontrada letra.';
+        }
+        else {
+            console.log("Tem no banco!");
+            lyrics = result;
+        }
+    
+        return lyrics; 
     }
-    else {
-        console.log("Tem no banco!");
-        lyrics = result;
-    }
-
-    return lyrics; 
 }
+
+// export const handler = async (event: APIGatewayProxyEventInterface) => {
+//     const { music, author } = event.pathParameters;
+//     const result = await getDynamoDB(author, music);
+//     let lyrics: any = '';
+    
+//     if(!result) {
+//         console.log("Inserindo");
+//         lyrics = await getLyrics(author, music);
+
+//         if(lyrics) 
+//             await insertDynamoDB(author, music, lyrics);
+//         else
+//             lyrics = 'Não foi encontrada letra.';
+//     }
+//     else {
+//         console.log("Tem no banco!");
+//         lyrics = result;
+//     }
+
+//     return lyrics; 
+// }
 
 async function insertDynamoDB(author: string, music: string, lyrics: string) {
     const params = {
