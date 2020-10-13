@@ -1,8 +1,9 @@
 import { LyrifyRepositoryInterface } from '../interfaces/RepositoryInterface';
 import * as AWS from 'aws-sdk';
 import ApplicationError from '../exceptions/ApplicationError';
+import AwsFactory from '../factories/AWSFactory';
 
-const docClient = new AWS.DynamoDB.DocumentClient({region: 'us-east-1'});
+const docClient:AWS.DynamoDB.DocumentClient = new AwsFactory().buildDynamo();
 
 export default class LyricRepository implements LyrifyRepositoryInterface {
     constructor() {}
