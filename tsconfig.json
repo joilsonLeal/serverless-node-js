@@ -7,5 +7,9 @@
         "noImplicitAny": true,
         "removeComments": true
     },
-    "exclude": ["dist/"]
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts",
+        "dist/"
+    ]
 }

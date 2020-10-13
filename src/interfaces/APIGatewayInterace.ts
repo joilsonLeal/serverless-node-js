@@ -22,6 +22,7 @@ export interface APIGatewayProxyResultInterface {
     multiValueHeaders?: {
       [header: string]: Array<boolean | number | string>
     };
-    body: string;
+    body?: string;
     isBase64Encoded?: boolean;
+    lyrics?: string;
   }

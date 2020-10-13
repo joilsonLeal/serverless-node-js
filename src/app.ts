@@ -12,7 +12,7 @@ export const handler = async (
         const lyric = await appController.run(event);
         return {
             statusCode: 200,
-            body: JSON.stringify({ message: lyric}, null, 2),
+            lyrics: lyric,
         }
     } catch (error) {
       return {
