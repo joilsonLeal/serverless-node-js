@@ -1,18 +1,15 @@
-import ApplicationError from '../exceptions/ApplicationError';
-import * as AWS from 'aws-sdk';
-global.fetch = require('node-fetch');
 import { 
     APIGatewayProxyEventInterface
 } from '../interfaces/APIGateWayInterace';
 
 import RepositoryInterface from '../repositories/LyricRepository';
-
-const docClient = new AWS.DynamoDB.DocumentClient({region: 'us-east-1'});
+import OvhRepository from '../repositories/OvhRepository';
 
 export default class AppController {
     public async run(event: APIGatewayProxyEventInterface) {
 
         const repo = new RepositoryInterface();
+        const ovh = new OvhRepository();
 
         const { music, author } = event.pathParameters;
         const result = await repo.getLyric(author, music);
@@ -20,9 +17,9 @@ export default class AppController {
         
         if(!result) {
             console.log("Procurando letra na api.lyrics.ovh");
-            lyrics = await getLyrics(author, music);
+            lyrics = await ovh.getLyrics(author, music);
             if(lyrics) {
-                console.log("Inserindo");
+                console.log("Inserindo...");
                 await repo.insertLyric(author, music, lyrics);
             }
             else
@@ -35,12 +32,4 @@ export default class AppController {
     
         return lyrics; 
     }
-}
-
-async function getLyrics(author: string, music: string): Promise<string> {
-    const response = await 
-        fetch(`https://api.lyrics.ovh/v1/${author}/${music}`)
-            .then(result => result.json())
-            .catch(err => {throw new ApplicationError(err)});
-    return response.lyrics;
 }
