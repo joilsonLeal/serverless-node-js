@@ -1,12 +1,9 @@
 import { LyrifyRepositoryInterface } from '../interfaces/RepositoryInterface';
 import * as AWS from 'aws-sdk';
 import ApplicationError from '../exceptions/ApplicationError';
-import AwsFactory from '../factories/AWSFactory';
-
-const docClient:AWS.DynamoDB.DocumentClient = new AwsFactory().buildDynamo();
 
 export default class LyricRepository implements LyrifyRepositoryInterface {
-    constructor() {}
+    constructor(private readonly docClient:AWS.DynamoDB.DocumentClient) {}
 
     public async getLyric(
         author: string, 
@@ -21,7 +18,7 @@ export default class LyricRepository implements LyrifyRepositoryInterface {
             }
         };
 
-        const data = await docClient.get(params).promise();
+        const data = await this.docClient.get(params).promise();
 
         if(data.Item)
             return data.Item.lyrics;
@@ -44,7 +41,7 @@ export default class LyricRepository implements LyrifyRepositoryInterface {
             TableName: 'lyrics'
         };
     
-        await docClient.put(params, (err, data) => {
+        await this.docClient.put(params, (err, data) => {
             if(err) { throw new ApplicationError(String(err)) }
         }).promise();
 
