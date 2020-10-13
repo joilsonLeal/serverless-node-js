@@ -6,10 +6,8 @@
   "author": "joilson <joilson_rg@hotmail.com>",
   "license": "MIT",
   "scripts": {
-    "compile": "tsc",
-    "start": "tsc -w",
     "server": "sls offline start",
-    "ncc": "ncc build src/controllers/AppController.ts -o dist"
+    "compile": "ncc build src/app.ts -o dist"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.63",
