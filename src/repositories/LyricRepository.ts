@@ -33,18 +33,16 @@ export default class LyricRepository implements LyrifyRepositoryInterface {
     ): Promise<void> {
 
         const params = {
+            TableName: 'lyrics',
             Item: {
                 author: author.toLowerCase(),
                 music: music.toLowerCase(),
                 lyrics: lyric
-            },
-            TableName: 'lyrics'
+            }
         };
     
         await this.docClient.put(params, (err, data) => {
             if(err) { throw new ApplicationError(String(err)) }
         }).promise();
-
-        return;
     }
 }

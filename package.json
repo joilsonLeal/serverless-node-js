@@ -8,7 +8,7 @@
   "scripts": {
     "server": "sls offline start",
     "compile": "ncc build src/app.ts -o dist",
-    "test": "jest"
+    "test": "jest --runInBand --detectOpenHandles"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.63",
