@@ -9,9 +9,7 @@ export default class AppController {
 
     constructor(private readonly docClient:AWS.DynamoDB.DocumentClient){}
 
-
     public async run(event: APIGatewayProxyEventInterface) {
-
         const repo = new LyricRepository(this.docClient);
         const ovh = new OvhRepository();
 
