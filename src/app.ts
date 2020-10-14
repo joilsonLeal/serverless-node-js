@@ -4,11 +4,15 @@ import {
     APIGatewayProxyResultInterface 
 } from './interfaces/APIGateWayInterace';
 
+import AwsFactory from './factories/AwsFactory';
+
+export const docClient: AWS.DynamoDB.DocumentClient = new AwsFactory().buildDynamo();
+
 export const handler = async (
     event: APIGatewayProxyEventInterface,
   ): Promise<APIGatewayProxyResultInterface> => {
     try {
-        const appController = new AppController();
+        const appController = new AppController(docClient);
         const lyric = await appController.run(event);
         return {
             statusCode: 200,

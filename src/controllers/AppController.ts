@@ -2,13 +2,17 @@ import {
     APIGatewayProxyEventInterface
 } from '../interfaces/APIGateWayInterace';
 
-import RepositoryInterface from '../repositories/LyricRepository';
+import LyricRepository from '../repositories/LyricRepository';
 import OvhRepository from '../repositories/OvhRepository';
 
 export default class AppController {
+
+    constructor(private readonly docClient:AWS.DynamoDB.DocumentClient){}
+
+
     public async run(event: APIGatewayProxyEventInterface) {
 
-        const repo = new RepositoryInterface();
+        const repo = new LyricRepository(this.docClient);
         const ovh = new OvhRepository();
 
         const { music, author } = event.pathParameters;
