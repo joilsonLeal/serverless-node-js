@@ -23,9 +23,6 @@ const makeMocks = () => {
           }
         ),
       }),
-      put: () => ({
-        promise: async () => Promise.resolve({})
-      })
     });
     return awsFactory
 }
@@ -67,14 +64,5 @@ describe('LyricRepository', () => {
     expect(lyrics).toEqual(`hello it's me`);
   });
 
-  it('should call the function insertLyric', async () => {
-    afterEach(setEnvVars);
-
-    const { sut } = makeSut();
-    await sut.insertLyric('adele', 'hello', `Hello it's me`);
-    expect('oi').toEqual('oi');
-    // expect(sut.insertLyric).toHaveBeenCalledWith({});
-  });
-    
 });
 
