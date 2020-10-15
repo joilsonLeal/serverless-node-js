@@ -1,30 +1,15 @@
 import AwsFactory from '../factories/AwsFactory';
 import LyricRepository from './LyricRepository';
+const data = require('../mocks/lyrics.json');
 
 const setEnvVars = () => {
   process.env.AWS_DYNAMO_REGION = 'fake_AWS_DYNAMO_REGION'
 }
-
-setEnvVars();
+jest.mock('./LyricRepository');
 
 const makeMocks = () => {
-  
-    const awsFactory = new AwsFactory();
-    awsFactory.buildDynamo = jest.fn().mockReturnValue({
-      get: () => ({
-        promise: async () => Promise.resolve(
-          {
-            Item:
-              {
-                author: 'adele',
-                music: 'hello',
-                lyrics: `hello it's me`
-              }
-          }
-        ),
-      }),
-    });
-    return awsFactory
+  const awsFactory = new AwsFactory();
+  return awsFactory;
 }
 
 const makeSut = () => {
@@ -39,8 +24,8 @@ const makeSut = () => {
 }
 
 describe('LyricRepository', () => {
-
-  afterEach(setEnvVars);
+  beforeEach(setEnvVars);
+  afterEach(jest.resetAllMocks);
 
   it('should return a new instance', () => {
     const { sut } = makeSut()
@@ -56,12 +41,32 @@ describe('LyricRepository', () => {
 
 
   it('should return lyrics when querying by author end music', async () => {
-    afterEach(setEnvVars);
 
     const { sut } = makeSut()
 
+    sut.getLyric = jest.fn().mockImplementation(async () => {
+      return Promise.resolve(`Hello, it's me`)
+    });
+
     const lyrics = await sut.getLyric('adele', 'hello');
-    expect(lyrics).toEqual(`hello it's me`);
+    expect(sut.getLyric).toHaveBeenCalledTimes(1);
+  });
+
+  it('should insert new register when passing new author, music and lyrics', async () => {
+
+    const { sut } = makeSut();
+
+    sut.insertLyric = jest.fn().mockImplementation(() => {
+      return Promise.resolve(data)
+    });
+
+    await sut.insertLyric('adele', 'hello', `Hello, it's me`);
+    expect(sut.insertLyric).toHaveBeenCalledTimes(1);
+    expect(sut.insertLyric).toHaveBeenCalledWith(
+      'adele',
+      'hello',
+      'Hello, it\'s me'
+    )
   });
 
 });
