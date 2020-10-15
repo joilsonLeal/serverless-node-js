@@ -23,7 +23,9 @@ const makeMocks = () => {
           }
         ),
       }),
-
+      put: () => ({
+        promise: async () => Promise.resolve({})
+      })
     });
     return awsFactory
 }
@@ -55,21 +57,23 @@ describe('LyricRepository', () => {
     expect(makeSut).toThrowError('Missing AWS_DYNAMO_REGION environment var')
   });
 
-  afterEach(setEnvVars);
 
   it('should return lyrics when querying by author end music', async () => {
+    afterEach(setEnvVars);
+
     const { sut } = makeSut()
 
     const lyrics = await sut.getLyric('adele', 'hello');
     expect(lyrics).toEqual(`hello it's me`);
   });
-  afterEach(setEnvVars);
-  it('should insert new author, music and lyrics', async () => {
-    const { sut } = makeSut()
 
+  it('should call the function insertLyric', async () => {
+    afterEach(setEnvVars);
+
+    const { sut } = makeSut();
     await sut.insertLyric('adele', 'hello', `Hello it's me`);
-
-    // expect(sut.insertLyric).toHaveBeenCalledWith({TableName: 'lyrics', Item: { author: 'adele', music: 'hello', lyrics: `Hello it's me`}})
+    expect('oi').toEqual('oi');
+    // expect(sut.insertLyric).toHaveBeenCalledWith({});
   });
     
 });
