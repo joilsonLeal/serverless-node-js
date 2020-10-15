@@ -30,7 +30,8 @@ describe('AppController', () => {
             pathParameters: {
                 "author": "adele",
                 "music": "test"
-            }
+            },
+            
         }
         const result = await appController.run(request);
 

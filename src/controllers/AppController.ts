@@ -12,7 +12,6 @@ export default class AppController {
     public async run(event: APIGatewayProxyEventInterface) {
         const repo = new LyricRepository(this.docClient);
         const ovh = new OvhRepository();
-
         const { music, author } = event.pathParameters;
         const result = await repo.getLyric(author, music);
         let lyrics: string = '';
