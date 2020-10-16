@@ -42,7 +42,7 @@ export const handler = async (
           {
             code: error.code,
             message: error.message,
-          },
+          }, 
           null,
           2,
         ),
