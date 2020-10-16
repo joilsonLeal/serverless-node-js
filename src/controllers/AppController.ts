@@ -33,4 +33,8 @@ export default class AppController {
     
         return lyrics; 
     }
+
+    public async test(event: APIGatewayProxyEventInterface) {
+        return event.pathParameters.name;
+    }
 }

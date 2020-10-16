@@ -12,11 +12,13 @@ export const awsFactory: AwsFactory = new AwsFactory();
 export const awsDynamo: AWS.DynamoDB.DocumentClient = 
   new AwsFactory().buildDynamo();
 
+export const appController: AppController = new AppController(awsDynamo);
+
 export const handler = async (
     event: APIGatewayProxyEventInterface,
   ): Promise<APIGatewayProxyResultInterface> => {
+    
     try {
-        const appController = new AppController(awsDynamo);
         const lyric = await appController.run(event);
         return {
             statusCode: 200,
