@@ -41,6 +41,8 @@ export default class LyricRepository implements LyrifyRepositoryInterface {
             }
         };
     
-        await this.docClient.put(params).promise();
+        await this.docClient.put(params, (err, data) => {
+            if(err) throw new ApplicationError(String(err), err.statusCode);
+        }).promise();
     }
 }
