@@ -1,0 +1,93 @@
+swagger: '2.0'
+
+schemes:
+  - https
+
+host: ygrlnjmhql.execute-api.us-east-1.amazonaws.com
+basePath: /default
+
+info: 
+  version: 1.0.0
+  title: Lyrify API
+  description: Obtém musicas
+  license:
+    name: MIT
+    url: http://opensource.org/licenses/MIT
+
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    in: header
+    name: x-api-key
+
+consumes: 
+  - application/json
+produces:
+  - application/json
+
+paths:
+  '/lyrify':
+    get:
+      summary: Obter letra de música
+      description: Obtém letra de uma música ao passar o nome do autor e o nome da música nos parâmetros
+      operationId: ObterLetra
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: query
+          name: author
+          required: true
+          type: string
+        - in: query
+          name: music
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/response'
+        400:
+          description: Requisição inválida
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 400
+              body:
+                type: string
+                example: message...
+
+              
+        403:
+          description: Não autenticado
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Forbidden
+        500:
+          description: Erro no servidor
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 500
+              body:
+                type: string
+                example: message...
+
+definitions:
+  response: 
+    type: object
+    properties:
+      statusCode:
+        type: integer
+        example: 200
+      lyrics:
+        type: string
+        example: Hello, it's me...
+      
