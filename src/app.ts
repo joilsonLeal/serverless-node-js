@@ -14,17 +14,6 @@ export const awsDynamo: AWS.DynamoDB.DocumentClient =
 
 export const appController: AppController = new AppController(awsDynamo);
 
-// export const teste = async (
-//   event: APIGatewayProxyEventInterface,
-//   ): Promise<APIGatewayProxyResultInterface> => {
-//     const test = await appController.test(event);
-//     return {
-//         statusCode: 200,
-//         lyrics: test,
-//     }
-//   }
-
-
 export const handler = async (
     event: APIGatewayProxyEventInterface,
   ): Promise<APIGatewayProxyResultInterface> => {
