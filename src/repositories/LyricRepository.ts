@@ -20,10 +20,7 @@ export default class LyricRepository implements LyrifyRepositoryInterface {
 
         const data = await this.docClient.get(params).promise();
 
-        if(data.Item)
-            return data.Item.lyrics;
-        else
-            return '';
+        return data.Item && data.Item.lyrics || '';
     }
 
     public async insertLyric(
