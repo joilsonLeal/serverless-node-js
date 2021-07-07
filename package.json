@@ -1,0 +1,29 @@
+{
+  "name": "serverless-node-js",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/joilsonLeal/serverless-node-js.git",
+  "author": "joilson <joilson_rg@hotmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "server": "sls offline start",
+    "compile": "ncc build src/app.ts -o dist",
+    "test": "jest --runInBand --detectOpenHandles"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.63",
+    "@types/aws-sdk": "^2.7.0",
+    "@types/node": "^14.11.5",
+    "jest": "^26.5.3",
+    "serverless-dynamodb-local": "^0.2.39",
+    "serverless-offline": "^6.8.0",
+    "serverless-webpack": "^5.3.5",
+    "ts-jest": "^26.4.1",
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {
+    "aws-lambda": "^1.0.6",
+    "aws-sdk": "^2.766.0",
+    "axios": "^0.20.0"
+  }
+}

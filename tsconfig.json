@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "outDir": "dist",
+        "moduleResolution": "node",
+        "noEmitOnError": true,
+        "noImplicitAny": true,
+        "removeComments": true,
+        "resolveJsonModule": true,
+    },
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts",
+        "dist/"
+    ]
+}
